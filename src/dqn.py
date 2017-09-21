@@ -17,10 +17,15 @@ class DQN:
 			self.input_layer = tf.placeholder(tf.float32,
 				[None, self.state_dim[0], self.state_dim[1], 3], name='input')
 
+
+			input_flat = tf.reshape(self.input_layer, [-1, self.state_dim[0]*self.state_dim[1]*3])
+			conv1 = tf.layers.dense(inputs=input_flat, units=128, name = 'd1')
+			pool2 = tf.layers.dense(inputs=conv1, units=128, name = 'd2')
+			'''
 			conv1 = tf.layers.conv2d(
 				inputs=self.input_layer,
 				filters=16,
-				kernel_size=[5,5],
+				kernel_size=[3,3],
 				padding="same",
 				activation=tf.nn.relu,
 				name = 'conv1')
@@ -31,7 +36,7 @@ class DQN:
 			conv2 = tf.layers.conv2d(
 				inputs=pool1,
 				filters=32,
-				kernel_size=[5,5],
+				kernel_size=[3,3],
 				padding="same",
 				activation=tf.nn.relu,
 				name = 'conv2')
@@ -43,12 +48,15 @@ class DQN:
 			# in this case, size is state_dim[0] * state_dim[1] * filter_size.
 			# because there is no pooling.
 			pool2_flat = tf.reshape(pool2, [-1, self.state_dim[0]*self.state_dim[1]*32])
+			'''
 
-			dense1 = tf.layers.dense(inputs=pool2_flat, units=128, name = 'dense1')
+			dense1 = tf.layers.dense(inputs=pool2, units=64, name = 'dense1')
 			dense2 = tf.layers.dense(inputs=dense1, units=4, name = 'dense2')
 
 			self.predict_val = tf.nn.softmax(dense2, name="prob")
+
 			self.y_val = tf.placeholder(tf.float32, [None, self.action_dim])
+
 			self.loss = tf.reduce_mean(tf.square(self.y_val - self.predict_val))
 			self.opt = tf.train.GradientDescentOptimizer(self.learning_rate, name="opt_GD")
 			self.train = self.opt.minimize(self.loss)

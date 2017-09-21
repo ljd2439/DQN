@@ -11,14 +11,14 @@ from agent import Agent
 WIN_WIDTH = 960
 WIN_HEIGHT = 960
 
-STATE_DIM = [4,4]
+STATE_DIM = [3,3]
 ACTION_DIM = 4
 BATCH_SIZE = 32
 
-MAX_STEP = 50
-EPISODE = 1000
+MAX_STEP = 100
+EPISODE = 4000
 
-USE_RECENT_CKPT = False
+USE_RECENT_CKPT = True
 
 TRAINING = False
 PLAYING = False
@@ -41,7 +41,6 @@ class Experiment:
 
 		self.isTraining = TRAINING
 		self.isPlaying = PLAYING
-		self.isStep = False
 
 		#======opengl setting======
 		argv = sys.argv
@@ -56,9 +55,12 @@ class Experiment:
 		#======================
 
 		if USE_RECENT_CKPT:
-			print "main.56.Load Recent CKPT"
+			print "main.59.Load Recent CKPT"
 			self.agent.load(saved_weight)
+		else:
+			print "main.62.Use New CKPT"
 
+		self.env.reset()
 		self.step=0
 		self.timer_func()
 		glutMainLoop()
@@ -70,11 +72,6 @@ class Experiment:
 			next_state, reward, done = self.env.step(np.argmax(action))
 			if done:
 				self.isPlaying = False
-
-			if self.isStep:
-				self.isStep = False
-				print "Action : ", ACTION_NAME[np.argmax(action)]
-				print "Action Q Value : ", action
 
 		if self.isTraining:
 			state = self.env.getState()
@@ -115,7 +112,7 @@ class Experiment:
 			self.env.reset()
 			self.isPlaying=False
 			self.isTraining=False
-		if key == 'd':
+		if key == 't':
 			if not self.isTraining:
 				self.env.reset()
 				self.isTraining=True
@@ -125,15 +122,28 @@ class Experiment:
 				self.agent.save(saved_weight)
 				self.isTraining=False
 		if key == ' ': # in playing mode, you can replay by push the 'p' button
-			self.isPlaying=True
+			self.isPlaying= not self.isPlaying
 			self.isTraining=False
 		if key == 'n':
-			self.isStep=True
-			self.isPlaying=True
-			self.isTraining=False
+			state = self.env.getState()
+			action = self.agent.act(state, is_expl=False)
+			print "main.130.",
+			print "Action : ", ACTION_NAME[np.argmax(action)]
+			print action
 
-		if key == 's': # in training mode, you can save by push the 's' button
-			self.agent.save(saved_weight)
+		#if key == 's': # in training mode, you can save by push the 's' button
+			#self.agent.save(saved_weight)
+
+		if key=='w':
+			self.env.step(0)
+			state = self.env.getState()
+			action = np.argmax(self.agent.act(state))
+		if key=='s':
+			self.env.step(1)
+		if key=='a':
+			self.env.step(2)
+		if key=='d':
+			self.env.step(3)
 
 	def display(self):
 		glClearColor(0.7, 0.7, 0.7, 0.0)

@@ -9,7 +9,6 @@ GAMMA = 0.95
 EPSILON_DECAY = 0.999
 LEARNING_RATE = 0.005
 
-	
 
 class Agent:
 	def __init__(self, state_dim, action_dim):
@@ -44,7 +43,7 @@ class Agent:
 				y_val[action] = (reward + self.gamma * np.amax(self.network.predict(state)[0]))
 			loss += self.network.fit(y_val, state)
 		#print "loss : ", loss/batch_size
-		if self.epsilon > self.epsilon_min:
+		if self.epsilon*self.epsilon_decay > self.epsilon_min:
 			self.epsilon *= self.epsilon_decay
 
 	def load(self, name):

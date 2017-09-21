@@ -22,10 +22,12 @@ class Environment:
 	def reset(self):
 		self.state.fill(0)
 
+		'''
 		self.remain_green_num=GREEN
-		self.state[3][3][1] = 1
+		self.state[self.state_dim[0]-1][self.state_dim[1]-1][1] = 1
 		self.state[0][0][2] = 1
-		'''random_list = range(0, self.state_dim[0]*self.state_dim[1])
+		'''
+		random_list = range(0, self.state_dim[0]*self.state_dim[1])
 		random.shuffle(random_list)
 		# ====== state setting ======
 		# set red = 0, green = 1, agent = 2
@@ -53,8 +55,6 @@ class Environment:
 		agent_x = random_list[i]/self.state_dim[1]
 		agent_y = random_list[i]%self.state_dim[1]
 		self.state[agent_x][agent_y][2] = 1
-
-		'''
 
 	def getState(self, is_copy=True):
 		if is_copy:
