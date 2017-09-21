@@ -23,6 +23,8 @@ USE_RECENT_CKPT = False
 TRAINING = False
 PLAYING = False
 
+ACTION_NAME = ['Up', 'Down', 'Left', 'Right']
+
 # name of weight data
 # you can load and save by this name
 saved_weight = "../data/saved_weight_11"
@@ -39,6 +41,7 @@ class Experiment:
 
 		self.isTraining = TRAINING
 		self.isPlaying = PLAYING
+		self.isStep = False
 
 		#======opengl setting======
 		argv = sys.argv
@@ -63,17 +66,20 @@ class Experiment:
 	def timer_func(self, fps=200):
 		if self.isPlaying:
 			state = self.env.getState()
-			action = self.agent.act(state)
-			next_state, reward, done = self.env.step(action)
-			glutPostRedisplay()
+			action = self.agent.act(state, is_expl=False)
+			next_state, reward, done = self.env.step(np.argmax(action))
 			if done:
 				self.isPlaying = False
 
+			if self.isStep:
+				self.isStep = False
+				print "Action : ", ACTION_NAME[np.argmax(action)]
+				print "Action Q Value : ", action
+
 		if self.isTraining:
 			state = self.env.getState()
-			action = self.agent.act(state)
+			action = np.argmax(self.agent.act(state))
 			next_state, reward, done = self.env.step(action)
-			glutPostRedisplay()
 
 			self.agent.remember(state, action, reward, next_state, done)
 			self.step += 1
@@ -96,6 +102,8 @@ class Experiment:
 
 				self.step = 0
 				self.env.reset()
+
+		glutPostRedisplay()
 		glutTimerFunc(int(1000/fps), self.timer_func, fps)
 
 	def keyCB(self, key, x, y):
@@ -116,7 +124,11 @@ class Experiment:
 				print "main.116.save network : ", saved_weight
 				self.agent.save(saved_weight)
 				self.isTraining=False
-		if key == 'p': # in playing mode, you can replay by push the 'p' button
+		if key == ' ': # in playing mode, you can replay by push the 'p' button
+			self.isPlaying=True
+			self.isTraining=False
+		if key == 'n':
+			self.isStep=True
 			self.isPlaying=True
 			self.isTraining=False
 
