@@ -24,15 +24,15 @@ class DQN:
 			'''
 			conv1 = tf.layers.conv2d(
 				inputs=self.input_layer,
-				filters=16,
-				kernel_size=[3,3],
+				filters=64,
+				kernel_size=[1,1],
 				padding="same",
 				activation=tf.nn.relu,
 				name = 'conv1')
 
 			#pool1 = tf.layers.max_pooling2d(inputs=conv1, pool_size=[2, 2], strides=2)
-			pool1 = conv1
-
+			pool2 = conv1
+			'''
 			conv2 = tf.layers.conv2d(
 				inputs=pool1,
 				filters=32,
@@ -43,11 +43,12 @@ class DQN:
 
 			#pool2 = tf.layers.max_pooling2d(inputs=conv2, pool_size=[2, 2], strides=2)
 			pool2 = conv2
+			'''
 
 			# You have to calculate the flatten size
 			# in this case, size is state_dim[0] * state_dim[1] * filter_size.
 			# because there is no pooling.
-			pool2_flat = tf.reshape(pool2, [-1, self.state_dim[0]*self.state_dim[1]*32])
+			pool2_flat = tf.reshape(pool2, [-1, self.state_dim[0]*self.state_dim[1]*64])
 
 			dense1 = tf.layers.dense(inputs=pool2_flat, units=64, name = 'dense1')
 			dense2 = tf.layers.dense(inputs=dense1, units=4, name = 'dense2')

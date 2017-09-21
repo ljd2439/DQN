@@ -1,3 +1,8 @@
+import sys
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
+sys.path.append('../base')
+
 from dqn import DQN
 from collections import deque
 import tensorflow as tf
@@ -7,8 +12,7 @@ import copy
 
 GAMMA = 0.95
 EPSILON_DECAY = 0.999
-LEARNING_RATE = 0.005
-
+LEARNING_RATE = 0.01
 
 class Agent:
 	def __init__(self, state_dim, action_dim):

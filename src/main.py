@@ -1,9 +1,13 @@
+import sys
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
+sys.path.append('../base')
+
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
 import numpy as np
-import sys
 
 from env import Environment
 from agent import Agent
@@ -18,7 +22,7 @@ BATCH_SIZE = 32
 MAX_STEP = 100
 EPISODE = 4000
 
-USE_RECENT_CKPT = True
+USE_RECENT_CKPT = False
 
 TRAINING = False
 PLAYING = False
