@@ -27,7 +27,7 @@ ACTION_NAME = ['Up', 'Down', 'Left', 'Right']
 
 # name of weight data
 # you can load and save by this name
-saved_weight = "../data/saved_weight_11"
+saved_weight = "../data/saved_weight_12"
 
 class Experiment:
 	def __init__(self):

@@ -30,7 +30,7 @@ class Agent:
 	def act(self, state, is_expl=True):
 		# based on epsilon greedy policy
 		if is_expl and np.random.rand() <= self.epsilon:
-			return random.randrange(self.action_dim) # exploration
+			return np.random.rand(self.action_dim) # exploration
 		act_value = self.network.predict(state)[0]               # exploitation
 		return act_value  # return action index
 
