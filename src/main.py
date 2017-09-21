@@ -11,19 +11,21 @@ from agent import Agent
 WIN_WIDTH = 960
 WIN_HEIGHT = 960
 
-STATE_DIM = [6,6]
+STATE_DIM = [4,4]
 ACTION_DIM = 4
 BATCH_SIZE = 32
 
-MAX_STEP = 100
+MAX_STEP = 50
 EPISODE = 1000
 
+USE_RECENT_CKPT = False
+
 TRAINING = False
-PLAYING = True
+PLAYING = False
 
 # name of weight data
 # you can load and save by this name
-saved_weight = "../data/saved_weight_10"
+saved_weight = "../data/saved_weight_11"
 
 class Experiment:
 	def __init__(self):
@@ -50,39 +52,29 @@ class Experiment:
 		glutKeyboardFunc(self.keyCB)
 		#======================
 
-		if self.isTraining:
-			self.training()
-		else:
-			if self.isPlaying:
-				self.agent.load(saved_weight)
-				self.playing()
+		if USE_RECENT_CKPT:
+			print "main.56.Load Recent CKPT"
+			self.agent.load(saved_weight)
 
+		self.step=0
+		self.timer_func()
 		glutMainLoop()
 
-	def playing(self):
-		self.env.reset()
-		self.timer_func()
-		print "new play"
-
-	def training(self):
-		if self.episode < EPISODE+1:
-			self.step = 0
-			self.env.reset()
-			self.timer_func()
-		else:
-			self.agent.save(saved_weight)
-
 	def timer_func(self, fps=200):
-		state = self.env.getState()
-		action = self.agent.act(state)
-		next_state, reward, done = self.env.step(action)
-		glutPostRedisplay()
-
 		if self.isPlaying:
-			if not done:
-				glutTimerFunc(int(1000/fps), self.timer_func, fps)
+			state = self.env.getState()
+			action = self.agent.act(state)
+			next_state, reward, done = self.env.step(action)
+			glutPostRedisplay()
+			if done:
+				self.isPlaying = False
 
 		if self.isTraining:
+			state = self.env.getState()
+			action = self.agent.act(state)
+			next_state, reward, done = self.env.step(action)
+			glutPostRedisplay()
+
 			self.agent.remember(state, action, reward, next_state, done)
 			self.step += 1
 
@@ -97,16 +89,36 @@ class Experiment:
 				print("episode: {}/{}, exploration epsilon: {:.2}\n".format(self.episode, EPISODE, self.agent.epsilon))
 
 				self.episode += 1
-				self.training()
-			else:
-				glutTimerFunc(int(1000/fps), self.timer_func, fps)
+				if self.episode >= EPISODE:
+					print "main.71.Network Saved!"
+					self.agent.save(saved_weight)
+					self.isTraining = False
+
+				self.step = 0
+				self.env.reset()
+		glutTimerFunc(int(1000/fps), self.timer_func, fps)
 
 	def keyCB(self, key, x, y):
 		if key == 'q': # quit
 			glutDestroyWindow (1)
-
+		if key == 'r':
+			#reset
+			self.step=0
+			self.env.reset()
+			self.isPlaying=False
+			self.isTraining=False
+		if key == 'd':
+			if not self.isTraining:
+				self.env.reset()
+				self.isTraining=True
+				self.isPlaying=False
+			elif self.isTraining:
+				print "main.116.save network : ", saved_weight
+				self.agent.save(saved_weight)
+				self.isTraining=False
 		if key == 'p': # in playing mode, you can replay by push the 'p' button
-			self.playing()
+			self.isPlaying=True
+			self.isTraining=False
 
 		if key == 's': # in training mode, you can save by push the 's' button
 			self.agent.save(saved_weight)

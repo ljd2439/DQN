@@ -6,7 +6,7 @@ import numpy as np
 import random
 import copy
 
-RED = 1
+RED = 0
 GREEN = 1
 
 class Environment:
@@ -21,7 +21,11 @@ class Environment:
 
 	def reset(self):
 		self.state.fill(0)
-		random_list = range(0, self.state_dim[0]*self.state_dim[1])
+
+		self.remain_green_num=GREEN
+		self.state[3][3][1] = 1
+		self.state[0][0][2] = 1
+		'''random_list = range(0, self.state_dim[0]*self.state_dim[1])
 		random.shuffle(random_list)
 		# ====== state setting ======
 		# set red = 0, green = 1, agent = 2
@@ -50,8 +54,13 @@ class Environment:
 		agent_y = random_list[i]%self.state_dim[1]
 		self.state[agent_x][agent_y][2] = 1
 
-	def getState(self):
-		return copy.deepcopy(self.state)
+		'''
+
+	def getState(self, is_copy=True):
+		if is_copy:
+			return copy.deepcopy(self.state)
+		else:
+			return self.state
 
 	def step(self, action):
 		agent_pos = [0,0]
@@ -123,6 +132,7 @@ class Environment:
 			glEnd()
 
 		#red, green, agent rendering
+
 		for i in range(self.state_dim[0]):
 			for j in range(self.state_dim[1]):
 				if self.state[i][j][0] == 1:

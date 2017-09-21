@@ -9,7 +9,9 @@ GAMMA = 0.95
 EPSILON_DECAY = 0.999
 LEARNING_RATE = 0.005
 
-class Agent():
+	
+
+class Agent:
 	def __init__(self, state_dim, action_dim):
 		self.state_dim = state_dim
 		self.action_dim = action_dim
@@ -25,9 +27,9 @@ class Agent():
 	def remember(self, state, action, reward, next_state, done):
 		self.memory.append((state, action, reward, next_state, done))
 
-	def act(self, state):
+	def act(self, state, is_expl=True):
 		# based on epsilon greedy policy
-		if np.random.rand() <= self.epsilon:
+		if is_expl and np.random.rand() <= self.epsilon:
 			return random.randrange(self.action_dim) # exploration
 		act_value = self.network.predict(state)[0]               # exploitation
 		return np.argmax(act_value)  # return action index
