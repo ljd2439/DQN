@@ -18,7 +18,7 @@ class DQN:
 				[None, self.state_dim[0], self.state_dim[1], 3], name='input')
 
 
-			input_flat = tf.reshape(self.input_layer, [-1, self.state_dim[0]*self.state_dim[1]*3])
+			'''input_flat = tf.reshape(self.input_layer, [-1, self.state_dim[0]*self.state_dim[1]*3])
 			conv1 = tf.layers.dense(inputs=input_flat, units=128, name = 'd1')
 			pool2 = tf.layers.dense(inputs=conv1, units=128, name = 'd2')
 			'''
@@ -48,9 +48,8 @@ class DQN:
 			# in this case, size is state_dim[0] * state_dim[1] * filter_size.
 			# because there is no pooling.
 			pool2_flat = tf.reshape(pool2, [-1, self.state_dim[0]*self.state_dim[1]*32])
-			'''
 
-			dense1 = tf.layers.dense(inputs=pool2, units=64, name = 'dense1')
+			dense1 = tf.layers.dense(inputs=pool2_flat, units=64, name = 'dense1')
 			dense2 = tf.layers.dense(inputs=dense1, units=4, name = 'dense2')
 
 			self.predict_val = tf.nn.softmax(dense2, name="prob")
