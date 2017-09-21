@@ -1,13 +1,11 @@
-import sys
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
-sys.path.append('../base')
+
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
 import numpy as np
+import sys
 
 from env import Environment
 from agent import Agent
@@ -22,7 +20,7 @@ BATCH_SIZE = 32
 MAX_STEP = 100
 EPISODE = 4000
 
-USE_RECENT_CKPT = False
+USE_RECENT_CKPT = True
 
 TRAINING = False
 PLAYING = False
@@ -31,7 +29,7 @@ ACTION_NAME = ['Up', 'Down', 'Left', 'Right']
 
 # name of weight data
 # you can load and save by this name
-saved_weight = "../data/saved_weight_12"
+saved_weight = "../data/saved_weight_13"
 
 class Experiment:
 	def __init__(self):

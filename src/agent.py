@@ -10,7 +10,7 @@ import numpy as np
 import random
 import copy
 
-GAMMA = 0.95
+GAMMA = 0.8
 EPSILON_DECAY = 0.999
 LEARNING_RATE = 0.01
 

@@ -24,8 +24,8 @@ class DQN:
 			'''
 			conv1 = tf.layers.conv2d(
 				inputs=self.input_layer,
-				filters=64,
-				kernel_size=[1,1],
+				filters=128,
+				kernel_size=[2,2],
 				padding="same",
 				activation=tf.nn.relu,
 				name = 'conv1')
@@ -48,7 +48,7 @@ class DQN:
 			# You have to calculate the flatten size
 			# in this case, size is state_dim[0] * state_dim[1] * filter_size.
 			# because there is no pooling.
-			pool2_flat = tf.reshape(pool2, [-1, self.state_dim[0]*self.state_dim[1]*64])
+			pool2_flat = tf.reshape(pool2, [-1, self.state_dim[0]*self.state_dim[1]*128])
 
 			dense1 = tf.layers.dense(inputs=pool2_flat, units=64, name = 'dense1')
 			dense2 = tf.layers.dense(inputs=dense1, units=4, name = 'dense2')
