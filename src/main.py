@@ -11,19 +11,19 @@ from agent import Agent
 WIN_WIDTH = 960
 WIN_HEIGHT = 960
 
-STATE_DIM = [6,6]
+STATE_DIM = [4,4]
 ACTION_DIM = 4
 BATCH_SIZE = 32
 
 MAX_STEP = 100
 EPISODE = 1000
 
-TRAINING = False
-PLAYING = True
+TRAINING = True
+PLAYING = False
 
 # name of weight data
 # you can load and save by this name
-saved_weight = "../data/saved_weight_10"
+saved_weight = "../data/saved_weight_5"
 
 class Experiment:
 	def __init__(self):

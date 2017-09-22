@@ -1,6 +1,5 @@
 import tensorflow as tf
 import numpy as np
-import copy
 
 class DQN:
 	def __init__(self, state_dim, action_dim, learning_rate):
@@ -11,7 +10,6 @@ class DQN:
 		self.set_network()
 
 	def set_network(self):
-
 		self.graph = tf.Graph()
 		with self.graph.as_default():
 			self.input_layer = tf.placeholder(tf.float32,
@@ -52,7 +50,6 @@ class DQN:
 			self.loss = tf.reduce_mean(tf.square(self.y_val - self.predict_val))
 			self.opt = tf.train.GradientDescentOptimizer(self.learning_rate, name="opt_GD")
 			self.train = self.opt.minimize(self.loss)
-
 
 			self.saver = tf.train.Saver()
 			self.sess = tf.Session(graph=self.graph)

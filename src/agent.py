@@ -3,7 +3,6 @@ from collections import deque
 import tensorflow as tf
 import numpy as np
 import random
-import copy
 
 GAMMA = 0.95
 EPSILON_DECAY = 0.999
@@ -27,8 +26,8 @@ class Agent():
 
 	def act(self, state):
 		# based on epsilon greedy policy
-		if np.random.rand() <= self.epsilon:
-			return random.randrange(self.action_dim) # exploration
+		#if np.random.rand() <= self.epsilon:
+		#	return random.randrange(self.action_dim) # exploration
 		act_value = self.network.predict(state)[0]               # exploitation
 		return np.argmax(act_value)  # return action index
 

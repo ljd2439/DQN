@@ -6,7 +6,7 @@ import numpy as np
 import random
 import copy
 
-RED = 1
+RED = 0
 GREEN = 1
 
 class Environment:
